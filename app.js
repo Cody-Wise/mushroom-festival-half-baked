@@ -1,5 +1,5 @@
 // import functions and grab DOM elements
-import { renderMushroom, renderFriend } from './render-utils.js';
+import { renderMushroom, renderFriend, renderBerries } from './render-utils.js';
 
 const friendsEl = document.querySelector('.friends');
 const friendInputEl = document.getElementById('friend-input');
@@ -9,6 +9,7 @@ const addFriendButton = document.getElementById('add-friend-button');
 // initialize state
 
 let mushroomCount = 3;
+let berryCount = 3;
 
 const friendData = [
     {
@@ -77,15 +78,22 @@ function displayFriends() {
 
             console.log(friendData);
             
-            if (mushroomCount < 1){
+            if (mushroomCount < 1 && berryCount < 1){
                 alert('Go Foraging');
             }
             if (friend.satisfaction < 3 && mushroomCount > 0){
                 friend.satisfaction++;
             
                 mushroomCount--;
+
+            } else if (friend.satisfaction < 3 && berryCount > 0){
+
+                friend.satisfaction++;
             
+                berryCount--;
             }
+            
+        
 
             
             displayFriends();
@@ -106,20 +114,39 @@ function displayFriends() {
     }
 }
 
+// function displayBerries() {
+
+//     mushroomsEl.textContent = '';
+
+//     for (let i = 0; i < berryCount ; i++) {
+
+//         const berryDisplayEl = renderBerries();
+
+//         mushroomsEl.append(berryDisplayEl);
+//     }  
+// }
+
 function displayMushrooms() {
     // clear out the mushroom div
 
     mushroomsEl.textContent = '';
 
-    for (let i = 0; i < mushroomCount; i++) {
+    for (let i = 0; i < mushroomCount ; i++) {
         // for each mushroom in your mushroom state, render and append a mushroom
         const mushroomDisplayEl = renderMushroom();
+        
 
         mushroomsEl.append(mushroomDisplayEl);
 
 
+        
     }
-}
+    for (let i = 0; i < berryCount ; i++) {
+
+        const berryDisplayEl = renderBerries();
+
+        mushroomsEl.append(berryDisplayEl);
+    }}
 
 displayFriends();
 displayMushrooms();
