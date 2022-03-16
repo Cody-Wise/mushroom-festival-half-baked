@@ -41,6 +41,21 @@ addMushroomButton.addEventListener('click', () => {
 });
 
 addFriendButton.addEventListener('click', () => {
+
+    const nameEl = friendInputEl.value;
+
+    const newFriend = {
+       
+        
+        name: nameEl || `Friend #${Math.floor(Math.random() * 1000)}`,
+        satisfaction: Math.ceil(Math.random() * 3),
+    };
+
+    friendData.unshift(newFriend);
+
+    friendInputEl.value = '';
+    displayFriends();
+
     // get the name from the input
     // create a new friend object
     // push it into the friends state array, passed in as an argument
@@ -51,9 +66,35 @@ addFriendButton.addEventListener('click', () => {
 function displayFriends() {
     // clear out the friends in DOM
 
+    friendsEl.textContent = '';
+
     // for each friend in state . . .
     for (let friend of friendData) {
         // use renderFriend to make a friendEl
+        const friendEl = renderFriend(friend);
+
+        friendEl.addEventListener('click', () => {
+
+            console.log(friendData);
+            
+            if (mushroomCount < 1){
+                alert('Go Foraging');
+            }
+            if (friend.satisfaction < 3 && mushroomCount > 0){
+                friend.satisfaction++;
+            
+                mushroomCount--;
+            
+            }
+
+            
+            displayFriends();
+            displayMushrooms();
+            
+        });
+
+        friendsEl.append(friendEl);
+        
 
         // this is a clickable list, so . . .
         //     add an event listener to each friend
@@ -68,8 +109,15 @@ function displayFriends() {
 function displayMushrooms() {
     // clear out the mushroom div
 
+    mushroomsEl.textContent = '';
+
     for (let i = 0; i < mushroomCount; i++) {
         // for each mushroom in your mushroom state, render and append a mushroom
+        const mushroomDisplayEl = renderMushroom();
+
+        mushroomsEl.append(mushroomDisplayEl);
+
+
     }
 }
 
