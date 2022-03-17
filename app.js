@@ -58,7 +58,6 @@ addFriendButton.addEventListener('click', () => {
     const nameEl = friendInputEl.value;
 
     const newFriend = {
-       
         
         name: nameEl || `Friend #${Math.floor(Math.random() * 1000)}`,
         satisfaction: 1,
