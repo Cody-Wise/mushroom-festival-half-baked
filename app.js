@@ -1,5 +1,5 @@
 // import functions and grab DOM elements
-import { renderMushroom, renderFriend, renderBerries } from './render-utils.js';
+import { renderMushroom, renderFriend, renderBerries, renderPoison } from './render-utils.js';
 
 const friendsEl = document.querySelector('.friends');
 const friendInputEl = document.getElementById('friend-input');
@@ -10,6 +10,7 @@ const addFriendButton = document.getElementById('add-friend-button');
 
 let mushroomCount = 3;
 let berryCount = 3;
+let poisonCount = 3;
 
 const friendData = [
     {
@@ -31,12 +32,23 @@ const friendData = [
 ];
 
 addMushroomButton.addEventListener('click', () => {
-    if (Math.random() > 0.5) {
+    if (Math.random() < 0.33) {
         alert('found a mushroom!');
 
         mushroomCount++;
         displayMushrooms();
-    } else {
+    } else if (Math.random() > 0.66) {
+        alert('found a berry!');
+
+        berryCount++;
+        displayMushrooms();
+    } else if (Math.random() > 0.88) {
+        alert('found a poison!');
+
+        poisonCount++;
+        displayMushrooms();
+    }
+    else {
         alert('no luck!');
     }
 });
@@ -49,7 +61,7 @@ addFriendButton.addEventListener('click', () => {
        
         
         name: nameEl || `Friend #${Math.floor(Math.random() * 1000)}`,
-        satisfaction: Math.ceil(Math.random() * 3),
+        satisfaction: 1,
     };
 
     friendData.unshift(newFriend);
@@ -73,33 +85,41 @@ function displayFriends() {
     for (let friend of friendData) {
         // use renderFriend to make a friendEl
         const friendEl = renderFriend(friend);
+        if (friend.satisfaction >= 1){
+            friendEl.addEventListener('click', () => {
 
-        friendEl.addEventListener('click', () => {
+                console.log(friendData);
+            
+                if (mushroomCount < 1 && berryCount < 1 && poisonCount < 1){
+                    alert('Go Foraging');
+                }
+                if (friend.satisfaction < 3 && mushroomCount > 0){
+                    friend.satisfaction++;
+            
+                    mushroomCount--;
 
-            console.log(friendData);
-            
-            if (mushroomCount < 1 && berryCount < 1){
-                alert('Go Foraging');
-            }
-            if (friend.satisfaction < 3 && mushroomCount > 0){
-                friend.satisfaction++;
-            
-                mushroomCount--;
+                } else if (friend.satisfaction < 3 && berryCount > 0){
 
-            } else if (friend.satisfaction < 3 && berryCount > 0){
+                    friend.satisfaction++;
+            
+                    berryCount--;
+                }
 
-                friend.satisfaction++;
+                else if (friend.satisfaction >= 1 && poisonCount > 0){
+
+                    friend.satisfaction--;
             
-                berryCount--;
-            }
+                    poisonCount--;
+                }
             
+       
         
 
             
-            displayFriends();
-            displayMushrooms();
+                displayFriends();
+                displayMushrooms();
             
-        });
+            });}
 
         friendsEl.append(friendEl);
         
@@ -146,7 +166,18 @@ function displayMushrooms() {
         const berryDisplayEl = renderBerries();
 
         mushroomsEl.append(berryDisplayEl);
-    }}
+    }
+
+    for (let i = 0; i < poisonCount ; i++) {
+
+        const berryDisplayEl = renderPoison();
+
+        mushroomsEl.append(berryDisplayEl);
+    }
+
+    
+
+}
 
 displayFriends();
 displayMushrooms();

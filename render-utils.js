@@ -12,6 +12,13 @@ export function renderBerries() {
     return div;
 }
 
+export function renderPoison() {
+    const div = document.createElement('div');
+    div.classList.add('poison');
+
+    return div;
+}
+
 export function renderFriend(friend) {
     const div = document.createElement('div');
     const nameEl = document.createElement('p');
@@ -22,6 +29,10 @@ export function renderFriend(friend) {
     emojiEl.classList.add('emoji');
 
     nameEl.textContent = friend.name;
+
+    if (friend.satisfaction === 0) {
+        emojiEl.textContent = '💀';
+    }
 
     if (friend.satisfaction === 1) {
         emojiEl.textContent = '😒';
