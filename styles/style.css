@@ -203,3 +203,19 @@ footer {
     background-repeat: no-repeat;
     background-image: url('../assets/porcini.png')
 }
+
+.berry {
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('../assets/berries.png')
+}
+
+.poison {
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('../assets/poison.png')
+}

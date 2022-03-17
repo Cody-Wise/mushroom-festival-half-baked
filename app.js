@@ -1,5 +1,5 @@
 // import functions and grab DOM elements
-import { renderMushroom, renderFriend } from './render-utils.js';
+import { renderMushroom, renderFriend, renderBerries, renderPoison } from './render-utils.js';
 
 const friendsEl = document.querySelector('.friends');
 const friendInputEl = document.getElementById('friend-input');
@@ -9,6 +9,8 @@ const addFriendButton = document.getElementById('add-friend-button');
 // initialize state
 
 let mushroomCount = 3;
+let berryCount = 3;
+let poisonCount = 3;
 
 const friendData = [
     {
@@ -30,17 +32,42 @@ const friendData = [
 ];
 
 addMushroomButton.addEventListener('click', () => {
-    if (Math.random() > 0.5) {
+    if (Math.random() < 0.33) {
         alert('found a mushroom!');
 
         mushroomCount++;
         displayMushrooms();
-    } else {
+    } else if (Math.random() > 0.66) {
+        alert('found a berry!');
+
+        berryCount++;
+        displayMushrooms();
+    } else if (Math.random() > 0.88) {
+        alert('found a poison!');
+
+        poisonCount++;
+        displayMushrooms();
+    }
+    else {
         alert('no luck!');
     }
 });
 
 addFriendButton.addEventListener('click', () => {
+
+    const nameEl = friendInputEl.value;
+
+    const newFriend = {
+        
+        name: nameEl || `Friend #${Math.floor(Math.random() * 1000)}`,
+        satisfaction: 1,
+    };
+
+    friendData.unshift(newFriend);
+
+    friendInputEl.value = '';
+    displayFriends();
+
     // get the name from the input
     // create a new friend object
     // push it into the friends state array, passed in as an argument
@@ -51,9 +78,50 @@ addFriendButton.addEventListener('click', () => {
 function displayFriends() {
     // clear out the friends in DOM
 
+    friendsEl.textContent = '';
+
     // for each friend in state . . .
     for (let friend of friendData) {
         // use renderFriend to make a friendEl
+        const friendEl = renderFriend(friend);
+        if (friend.satisfaction >= 1){
+            friendEl.addEventListener('click', () => {
+
+                console.log(friendData);
+            
+                if (mushroomCount < 1 && berryCount < 1 && poisonCount < 1){
+                    alert('Go Foraging');
+                }
+                if (friend.satisfaction < 3 && mushroomCount > 0){
+                    friend.satisfaction++;
+            
+                    mushroomCount--;
+
+                } else if (friend.satisfaction < 3 && berryCount > 0){
+
+                    friend.satisfaction++;
+            
+                    berryCount--;
+                }
+
+                else if (friend.satisfaction >= 1 && poisonCount > 0){
+
+                    friend.satisfaction--;
+            
+                    poisonCount--;
+                }
+            
+       
+        
+
+            
+                displayFriends();
+                displayMushrooms();
+            
+            });}
+
+        friendsEl.append(friendEl);
+        
 
         // this is a clickable list, so . . .
         //     add an event listener to each friend
@@ -65,12 +133,49 @@ function displayFriends() {
     }
 }
 
+// function displayBerries() {
+
+//     mushroomsEl.textContent = '';
+
+//     for (let i = 0; i < berryCount ; i++) {
+
+//         const berryDisplayEl = renderBerries();
+
+//         mushroomsEl.append(berryDisplayEl);
+//     }  
+// }
+
 function displayMushrooms() {
     // clear out the mushroom div
 
-    for (let i = 0; i < mushroomCount; i++) {
+    mushroomsEl.textContent = '';
+
+    for (let i = 0; i < mushroomCount ; i++) {
         // for each mushroom in your mushroom state, render and append a mushroom
+        const mushroomDisplayEl = renderMushroom();
+        
+
+        mushroomsEl.append(mushroomDisplayEl);
+
+
+        
     }
+    for (let i = 0; i < berryCount ; i++) {
+
+        const berryDisplayEl = renderBerries();
+
+        mushroomsEl.append(berryDisplayEl);
+    }
+
+    for (let i = 0; i < poisonCount ; i++) {
+
+        const berryDisplayEl = renderPoison();
+
+        mushroomsEl.append(berryDisplayEl);
+    }
+
+    
+
 }
 
 displayFriends();
